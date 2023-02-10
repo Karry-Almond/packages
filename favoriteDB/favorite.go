@@ -1,13 +1,12 @@
 package favoriteDB
 
 import (
-	"context"
 	"log"
 
 	"github.com/karry-almond/packages/model"
 )
 
-func NewFavorite(ctx context.Context, user_id int64, video_id int64) (status int32, err error) {
+func NewFavorite(user_id int64, video_id int64) (status int32, err error) {
 
 	// 创建一条favorite数据
 	favorite := model.Favorite{
@@ -30,7 +29,7 @@ func NewFavorite(ctx context.Context, user_id int64, video_id int64) (status int
 
 }
 
-func CancelFavorite(ctx context.Context, user_id int64, video_id int64) (status int32, err error) {
+func CancelFavorite(user_id int64, video_id int64) (status int32, err error) {
 	//先根据user_id和video_id寻找到id，再根据id软删除
 	var favorite model.Favorite
 
