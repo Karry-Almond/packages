@@ -1,4 +1,4 @@
-module favoriteDB
+module github.com/karry-almond/package/favoriteDB
 
 go 1.18
 
