@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/karry-almond/model"
+	"github.com/karry-almond/packages/model"
 )
 
 func NewFavorite(ctx context.Context, user_id int64, video_id int64) (status int32, err error) {
