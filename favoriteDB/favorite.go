@@ -3,6 +3,9 @@ package favoriteDB
 import (
 	// "log"
 
+	"errors"
+
+	// "github.com/karry-almond/model"
 	"github.com/karry-almond/packages/model"
 	"gorm.io/gorm"
 	// "golang.org/x/tools/go/analysis/passes/nilfunc"
@@ -50,14 +53,24 @@ func CancelFavorite(user_id int64, video_id int64) (status int32, err error) {
 	var favorite model.Favorite
 
 	err = Db.Transaction(func(tx *gorm.DB) error {
+		//通过user_id和video_id找到要删除的favorite记录
 		if err := tx.Select("*").First(&model.Favorite{UserId: user_id, VideoId: video_id}).Scan(&favorite).Error; err != nil {
 			return err
 		}
-
+		//删除这条favorite记录
 		if err := tx.Delete(&favorite).Error; err != nil {
 			return err
 		}
+		//更改对应video的favorite_count
+		var video model.Video
 
+		if err := tx.Select("*").First(&model.Video{ID: video_id}).Scan(&video).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&model.Video{ID: video_id}).Update("favorite_count", video.FavoriteCount+1).Error; err != nil {
+			return err
+		}
 		return nil
 	})
 
@@ -69,10 +82,20 @@ func CancelFavorite(user_id int64, video_id int64) (status int32, err error) {
 }
 
 func GetFavoriteList(user_id int64) (status int32, videoList []model.Video, err error) {
+	var favoriteList []model.Favorite
 
-	if err = Db.Where(&model.Favorite{UserId: user_id}).Find(&videoList).Error; err != nil {
+	//根据user_id，在favorite表中找到他的所有favorite记录
+	if err = Db.Select("video_id").Where(&model.Favorite{UserId: user_id}).Find(&favoriteList).Error; err != nil {
 		return 1, nil, err
 	}
+	//根据favorite记录找到所有对应video_id的video
+	var video model.Video
+	for _, favoritelog := range favoriteList {
+		if err = Db.Where(&model.Video{ID: favoritelog.VideoId}).First(&video).Error; err != nil {
+			return 1, videoList, errors.New("failed finding all the favorite videos")
+		}
+		videoList = append(videoList, video)
+	}
 
-	return 0, videoList, nil
+	return 0, videoList, err
 }
