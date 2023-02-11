@@ -6,6 +6,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 var Db *gorm.DB
@@ -16,7 +17,8 @@ func Init() {
 		Conn: sqlDB,
 	}), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-            SingularTable: true}
+            SingularTable: true,
+		},
 	})
 	if err != nil {
 		log.Panicln("err:", err.Error())
