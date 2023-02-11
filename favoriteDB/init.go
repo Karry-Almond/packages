@@ -14,7 +14,10 @@ func Init() {
 	sqlDB, err := sql.Open("mysql", "root:Sss15946768062@tcp(47.100.224.26:3306)/tiktok8062?parseTime=True")
 	Db, err = gorm.Open(mysql.New(mysql.Config{
 		Conn: sqlDB,
-	}), &gorm.Config{})
+	}), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+            SingularTable: true}
+	})
 	if err != nil {
 		log.Panicln("err:", err.Error())
 	}
