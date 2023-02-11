@@ -67,3 +67,12 @@ func CancelFavorite(user_id int64, video_id int64) (status int32, err error) {
 
 	return 0, nil
 }
+
+func GetFavoriteList(user_id int64) (status int32, videoList []model.Video, err error) {
+
+	if err = Db.Where(&model.Favorite{UserId: user_id}).Find(&videoList).Error; err != nil {
+		return 1, nil, err
+	}
+
+	return 0, videoList, nil
+}

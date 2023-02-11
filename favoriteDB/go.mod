@@ -3,8 +3,7 @@ module github.com/karry-almond/packages/favoriteDB
 go 1.18
 
 require (
-	github.com/karry-almond/packages v0.0.2-0.20230210151808-57cbe5166ee8
-	golang.org/x/tools v0.6.0
+	github.com/karry-almond/packages v0.0.2-0.20230211065853-5e0b77e49fe7
 	gorm.io/driver/mysql v1.4.6
 	gorm.io/gorm v1.24.5
 )
